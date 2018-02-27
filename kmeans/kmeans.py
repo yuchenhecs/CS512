@@ -1,27 +1,51 @@
 #!/usr/bin/python
 
 
-#import numpy as np
+import numpy as np
 
 
 from sklearn.cluster import KMeans
-
 from sklearn import datasets
 
-# np.random.seed(5)
 
-# iris = datasets.load_iris()
-# X = iris.data
-# y = iris.target
+fname = 'phrase_YELP.txt'
 
-# estimators = [('k_means_iris_8', KMeans(n_clusters=8)),
-#               ('k_means_iris_3', KMeans(n_clusters=3)),
-#               ('k_means_iris_bad_init', KMeans(n_clusters=3))]
+with open(fname) as f:
+    lines = f.readlines()
 
+phrases = []
+embeds = []
+
+for l in lines:
+    tokens = l.split()
+    phrases.append(tokens[0])
+    embeds.append(tokens[1:])
+
+#print embeds
+
+np.random.seed(5)
+
+estimators = [('k_means_8', KMeans(n_clusters=8))]
+labels = []
 # fignum = 1
 # titles = ['8 clusters', '3 clusters', '3 clusters, bad initialization']
-# for name, est in estimators:
-#     est.fit_predict(X)
-#     labels = est.labels_
-
+for name, est in estimators:
+    label = est.fit_predict(embeds)
+    labels.append(label)
+    print label
+    print len(label)
 #     fignum = fignum + 1
+
+clusters = []
+for label in labels:
+    c = {}
+    clusters.append(c)
+    for i, l in enumerate(label):
+        if l not in c:
+            c[l] = []
+        c[l].append(phrases[i])
+
+print clusters[0][0]
+
+
+
